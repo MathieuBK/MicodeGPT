@@ -133,7 +133,7 @@ user_prompt = st.text_input(" ",
                             key="prompt",
                             placeholder="Écrivez votre message...",
                             on_change=generate_response,
-                            label_visibility="collapsed"
+
                             )
 
 # st.text_input(label, value="", max_chars=None, key=None, type="default", help=None, autocomplete=None, on_change=None, args=None, kwargs=None, *, placeholder=None, disabled=False, label_visibility="visible")
