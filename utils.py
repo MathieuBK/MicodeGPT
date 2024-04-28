@@ -1,26 +1,32 @@
 import os
 import openai
-import requests
 import streamlit as st
-import json
 from dotenv import load_dotenv
 
+
+# --- LOAD ENVIRONMENT VARIABLES --- # 
 load_dotenv()
 
-# openai.api_key = st.secrets["OPENAI_API_KEY"]
+
+# --- LOAD API KEYS --- # 
+
+# Load OPENAI_API_KEY
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# api_key_pinecone = st.secrets["PINECONE_API_KEY"]
+# Load PINECONE_API_KEY
 api_key_pinecone = os.getenv("PINECONE_API_KEY")
 
-# pinecone_environment = st.secrets["PINECONE_ENVIRONMENT"]
+# Set up PINECONE_ENVIRONMENT
 pinecone_environment = os.getenv("PINECONE_ENVIRONMENT")
 
-# pinecone_endpoint = st.secrets["PINECONE_ENDPOINT"]
+# Set up PINECONE_ENDPOINT
 pinecone_endpoint = os.getenv("PINECONE_ENDPOINT")
 
 
 
+# --- RETRIEVAL AUGMENTED GENERATION --- # 
+
+# Create embeddings from user query & MicodeGPT reponses 
 def get_embeddings_openai(text):
     try:
         response = openai.Embedding.create(
@@ -33,6 +39,7 @@ def get_embeddings_openai(text):
         print(f"Error in get_embeddings_openai: {e}")
         raise
 
+# Semantic search in PINECONE Database
 def semantic_search(query, index, **kwargs):
     try:
         xq = get_embeddings_openai(query)
