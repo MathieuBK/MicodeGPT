@@ -1,7 +1,7 @@
 import streamlit as st
 import re
 
-
+# --- MICODE GPT MESSAGES --- #  
 bot_msg_container_html_template = '''
 <div style='padding: 10px; border-radius: 5px; margin-bottom: 10px; display: flex; justify-content: flex-start; gap:5px'>
         <img src="https://i.postimg.cc/QdSjq827/Micode.png" style="max-height: 50px; max-width: 50px; border-radius: 50%; z-index:3; display: flex; justify-self: flex-start;">
@@ -11,6 +11,7 @@ bot_msg_container_html_template = '''
 </div>
 '''
 
+# --- USERS MESSAGES --- #  
 user_msg_container_html_template = '''
 <div style='padding: 10px; border-radius: 5px; margin-bottom: 10px; display: flex; justify-content: flex-end; gap:5px'>
     <div style="width: auto; background-color: #F0F2F6; color:#262730; border-radius: 8px; padding-top: 10px; padding-left: 20px; padding-bottom: 10px; padding-right: 20px">
@@ -20,6 +21,10 @@ user_msg_container_html_template = '''
 </div>
 '''
 
+
+# --- RETRIEVAL AUGMENTED GENERATION --- # 
+
+# Retrieve Snippets from Pinecone Database
 def render_article_preview(docs, tickers):
     message = f"<h5>Here are relevant articles for {tickers} that may answer your question. &nbsp; &nbsp;</h5>"
     message += "<div>"
@@ -31,6 +36,7 @@ def render_article_preview(docs, tickers):
     message += "</div>"
     return message
 
+# Summarize & Merge Snippets to return Message
 def render_earnings_summary(ticker, summary):
     transcript_title = summary["transcript_title"]
     message = f"<h5>Here is summary for {ticker} {transcript_title} </h5>"
@@ -41,6 +47,7 @@ def render_earnings_summary(ticker, summary):
     message += "</div>"
     return message
 
+# User Interface - Organize Messages depending if it comes from MicodeGPT or the User
 def render_chat(**kwargs):
     """
     Handles is_user 
