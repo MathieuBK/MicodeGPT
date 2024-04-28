@@ -59,7 +59,7 @@ If you have any questions or need assistance, please feel free to reach out to m
 
 ## Acknowledgments
 
-- Micode & its Micorp Team for creating valuable IT videos ! (Please, don't sue me 😱)
+- Micode & the Micorp Team for creating valuable IT videos ! (Please, don't sue me 😱)
 - OpenAI for their language models and embeddings.
 - AssemblyAI for providing a great Whisper API DX.
 - Langchain for their text processing tools.
