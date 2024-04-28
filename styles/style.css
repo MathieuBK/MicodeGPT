@@ -1,12 +1,19 @@
-/* Hide Streamlit Branding */
+/* Define Brand Main color */
+*:active {
+  color: #3610a1;
+}
+
+/* Hide Streamlit menu */
 #MainMenu {
   visibility: hidden;
 }
 
-footer {
+/* Hide Header */
+header {
   visibility: hidden;
 }
 
-header {
+/* Hide Footer */
+footer {
   visibility: hidden;
 }
