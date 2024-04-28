@@ -2,60 +2,68 @@ import os
 import openai
 import streamlit as st
 from dotenv import load_dotenv
-# from render import bot_msg_container_html_template, user_msg_container_html_template
 from render import *
-# from utils import semantic_search
 from utils import *
 import prompts
 from pinecone import Pinecone
-# import pinecone
 
+
+# --- LOAD ENVIRONMENT VARIABLES --- # 
 load_dotenv()
-
 
 
 # --- SET PAGE CONFIG --- # 
 st.set_page_config(page_title="MicodeGPT", page_icon=":computer:")
 
 
+# --- LOAD CSS STYLE --- # 
+with open('./styles/style.css') as f:
+    css = f.read()
+    st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
-# Set up OpenAI API key
-# openai.api_key = st.secrets["OPENAI_API_KEY"]
-# pinecone.init(api_key=st.secrets["PINECONE_API_KEY"], environment=st.secrets["PINECONE_ENVIRONMENT"])
-# index = pinecone.Index(st.secrets["PINECONE_INDEX_NAME"])
 
-# Set up OpenAI API key
+# --- LOAD OPENAI API KEY --- # 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-# pinecone.init(api_key=os.getenv("PINECONE_API_KEY"), environment=os.getenv("PINECONE_ENVIRONMENT"))
 
-# pinecone.init(api_key=os.getenv("PINECONE_API_KEY"))
+
+# --- LOAD PINECONE API KEY --- # 
 pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 
 
-# index = pinecone.Index(os.getenv("PINECONE_INDEX_NAME"))
+# --- LOAD PINECONE INDEX --- # 
 index = pc.Index(os.getenv("PINECONE_INDEX_NAME"))
 
+
+
+
+### ------ ////// MICODE GPT MAIN APP \\\\\\ ------ #### 
+
+# --- PAGE LAYOUT --- # 
+# Split Page into 2 columns
 col1, col2 = st.columns([1,3])
 
+# --- LEFT COLUMN --- # 
+# MicodeGPT Avatar
 with col1:
     st.write("")
     col1.image(
             "assets/Micode.png",
             # Manually Adjust the width of the image as per requirement
              )
-    
+
+# --- RIGHT COLUMN --- #  
+# Name of the GPT
 with col2:
     col1a, col2a = st.columns([0.01,10000])    
     col2a.header("💻 MicodeGPT")
 
-
+# MicodeGPT - Descriptive introduction for user 
 with col2:
     col1, col2 = st.columns([1,100])
     col2.write("Bonjour, je suis MicodeGPT, une IA entraînée sur les vidéos de ma chaîne YouTube *\"Underscore_\"* où je débrief les histoires les plus folles de l'IT. Posez-moi vos questions, et je ferai de mon mieux pour y répondre en vous fournissant les liens de vidéos pertinentes pour approfondir le sujet.")
 
-# st.caption("---")
 
-
+# --- CHAT HISTORY & MESSAGE MANAGEMENT LOGIC --- #  
 # Define chat history storage
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -79,7 +87,6 @@ def generate_response():
     
 
     print(f"Query: {st.session_state.prompt}")
-    # sources = []  # New list to store source titles
     unique_sources = set()  # Use a set to store unique source titles
 
     # Perform semantic search and format results
@@ -90,7 +97,6 @@ def generate_response():
     context = ""
     for i, (title, transcript, source) in enumerate(search_results):
         context += f"Snippet from: {title}\n {transcript}\n\n"
-        # sources.append(source)  # Store source titles in the list
         unique_sources.add(source)  # Add unique source urls to the set
 
     # Generate human prompt template and convert to API message format
@@ -127,29 +133,18 @@ for message in st.session_state.history:
         st.write(bot_msg_container_html_template.replace("$MSG", message["message"]), unsafe_allow_html=True)
 
 # User input prompt
-# st.write("")
+# st.write(" ")
 user_prompt = st.text_input(" ",
-                            # ":orange[Écrivez votre message :]",
                             key="prompt",
                             placeholder="Écrivez votre message...",
                             on_change=generate_response,
-
                             )
 
-# st.text_input(label, value="", max_chars=None, key=None, type="default", help=None, autocomplete=None, on_change=None, args=None, kwargs=None, *, placeholder=None, disabled=False, label_visibility="visible")
-# !!! ERROR IN LOGS : "2024-04-22 01:23:31.938 `label` got an empty value. This is discouraged for accessibility reasons and may be disallowed in the future by raising an exception. Please provide a non-empty label and hide it with label_visibility if needed." 
-# ==> #a -> add space in between brackets (i.e. " " instead of "") and label_visibility="collapsed" in st.text_input and all relevant fields if needed
 
-
-# col1, col2 = st.columns([0.52, 0.5])
-# col2.caption(":gray[©️ 2024 Copyright [Mathieu Bekkaye](https://mathieubk-personalwebsite.streamlit.app) - All rights reserved.]")
-
+# COPYRIGHT
 st.markdown("<div style='text-align: right; color: #83858C; font-size:14px;'>&copy; 2024 Copyright <a href='https://mathieubk-personalwebsite.streamlit.app'>Mathieu Bekkaye</a> - All rights reserved.</div>", unsafe_allow_html=True)
 
 
-with open('./styles/style.css') as f:
-    css = f.read()
 
-st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
 
