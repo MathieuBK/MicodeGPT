@@ -44,7 +44,7 @@ def semantic_search(query, index, **kwargs):
     try:
         xq = get_embeddings_openai(query)
 
-        xr = index.query(vector=xq[0], top_k=kwargs.get('top_k', 1), include_metadata=kwargs.get('include_metadata', True))
+        xr = index.query(vector=xq[0], top_k=kwargs.get('top_k', 3), include_metadata=kwargs.get('include_metadata', True))
 
         if xr.error:
             print(f"Invalid response: {xr}")
